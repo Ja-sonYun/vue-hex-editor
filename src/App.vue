@@ -1,18 +1,30 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+	<div id="app">
+		<Uploader v-on:giveBinaryData="gotBinaryData"/>
+		<HexEditor v-if="binaryData" :binaryData="binaryData" :perPage="1000"/>
+	</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HexEditor from './components/HexEditor.vue';
+import Uploader from './components/Uploader.vue';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+	name: 'App',
+	components: {
+		HexEditor,
+		Uploader,
+	},
+	data: function() {
+		return {
+			binaryData: '',
+		}
+	},
+	methods: {
+		gotBinaryData: function(binary) {
+			this.binaryData = binary;
+		},
+	},
 }
 </script>
 
