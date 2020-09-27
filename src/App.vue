@@ -1,7 +1,8 @@
 <template>
 	<div id="app">
+		<p class="title">Hex Editor</p>
 		<Uploader v-on:giveBinaryData="gotBinaryData"/>
-		<HexEditor v-if="binaryData" :binaryData="binaryData" :perPage="1000"/>
+		<HexEditor v-if="binaryData" :binaryData="binaryData" :perPage="4096"/>
 	</div>
 </template>
 

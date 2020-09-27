@@ -51,10 +51,10 @@
 			</thead>
 			<tbody>
 				<tr v-for="(w, y) of Math.ceil(perPage/16)" :key="y+'_tr'">
-					<td :id="y+'y'" style="text-align:left">{{ giveAddress(y*=16) }}</td>
+					<td :id="y+'y'" style="text-align:left">{{ giveAddress((y*=16)+frontAddress) }}</td>
 					<td v-for="(e, x) in 16" :key="x+'_rd'">
 						<template v-if="binaryDataSliced[w=x+y] != undefined">
-							<a :id="w" @click="editHex(w)" >{{ binaryDataSliced[w].hexEncode().toUpperCase() }}</a>
+							<a :id="frontAddress+x+y" @click="editHex(frontAddress+x+y)" >{{ binaryDataSliced[w].hexEncode().toUpperCase() }}</a>
 						</template>
 					</td>
 					<td></td>
@@ -85,7 +85,9 @@ export default {
 			convertableTypes: [ {'type': 'decimal', 'i':0}, {'type': 'hexadecimal', 'i':1}, {'type': 'binary', 'i':2}, {'type': 'ascii', 'i':3} ],
 			showingConvertedValue: false,
 			current: 1,
+			frontAddress: 0,
 			until: 0,
+			editedHexs: [],
 		}
 	},
 	methods: {
@@ -114,11 +116,14 @@ export default {
 		},
 		gotoAddress() {
 			let moveTo = parseInt(this.search, 16);
-			if(this.search && moveTo < this.until) {
-				let element = document.getElementById(moveTo);
-				element.scrollIntoView({ behavior: 'smooth', block: 'end' })
-				this.highlightElement(element);
-				this.$buefy.toast.open(`moving to ${this.search}.`);
+			if(this.search && moveTo < this.binaryData.length) {
+				this.current = Math.floor(moveTo / this.perPage)+1;
+				setTimeout(() => {
+					let element = document.getElementById(moveTo);
+					element.scrollIntoView({ behavior: 'smooth', block: 'end' })
+					this.highlightElement(element);
+					this.$buefy.toast.open(`moving to ${this.search}.`);
+				}, 500)
 			} else {
 				this.$buefy.toast.open(`please enter the valid address.`)
 			}
@@ -225,9 +230,9 @@ export default {
 			this.addressMaxLength = this.until.toString(16).length;
 		},
 		current: function(val) {
-			let frontAddress = (val - 1) * this.perPage;
-			this.until = frontAddress + this.perPage;
-			this.binaryDataSliced = this.binaryData.slice(frontAddress, frontAddress + this.perPage);
+			this.frontAddress = (val - 1) * this.perPage;
+			this.until = this.frontAddress + this.perPage;
+			this.binaryDataSliced = this.binaryData.slice(this.frontAddress, this.frontAddress + this.perPage);
 		}
 	},
 }
