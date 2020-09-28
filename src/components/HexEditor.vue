@@ -62,6 +62,21 @@
 				</tr>
 			</tbody>
 		</table>
+		<div class="paginate">
+			<b-pagination
+				:total="binaryData.length"
+				size="is-small"
+				v-model="current"
+				order="is-centered"
+				:per-page="perPage">
+				<b-pagination-button
+					slot-scope="props"
+					:page="props.page"
+					:id="`page${props.page.number}`">
+					{{ (props.page.number-1) }}k~
+				</b-pagination-button>
+			</b-pagination>
+		</div>
 	</div>
 </template>
 
