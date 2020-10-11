@@ -1,16 +1,29 @@
 <template>
-	<b-field>
-		<b-button @click="gotFile">Convert To HEX</b-button>
-		<b-upload v-model="file" class="file-label">
-			<span class="file-cta">
-				<b-icon class="file-icon" icon="upload"></b-icon>
-				<span class="file-label">Click to upload</span>
-			</span>
-			<span class="file-name" v-if="file">
-				{{ file.name  }}
-			</span>
-		</b-upload>
-	</b-field>
+	<div id="fileupload">
+		<b-field>
+			<b-upload v-model="file"
+				drag-drop>
+				<section class="section">
+					<div v-if="file" class="tags">
+						<span class="tag is-primary">
+							{{file.name}}
+						</span>
+					</div>
+					<div v-else class="content has-text-centered">
+						<p>Drop your file or click to upload.</p>
+					</div>
+				</section>
+			</b-upload>
+		</b-field>
+		<div v-if="file">
+			<b-button size="is-small" @click="gotFile">
+				Convert to Hex
+			</b-button>
+			<b-button size="is-small" @click="deleteDropFile">
+				Cancel
+			</b-button>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -38,7 +51,17 @@ export default {
 		},
 		bufferToString: function(buf) {
 			return String.fromCharCode.apply("", new Uint8Array(buf));
+		},
+		deleteDropFile: function() {
+			this.file = null;
 		}
 	}
 }
 </script>
+
+<style>
+#fileupload {
+	padding-top: 50px;
+	text-align: center;
+}
+</style>
