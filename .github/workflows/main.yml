@@ -1,0 +1,32 @@
+name: Publish gh pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v3.0.0
+      with:
+        node-version: '16'
+
+    - name: run npm install
+      run: npm install
+      
+    - name: build
+      run: npm run build
+
+    - name: GitHub Pages action
+      uses: peaceiris/actions-gh-pages@v3.7.3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: dist
+        cname: abex.dev
